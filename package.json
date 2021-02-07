@@ -1,0 +1,25 @@
+{
+  "name": "mockuphack",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/lonersCompany/MockupHack.git",
+  "author": "simon-barak.link",
+  "license": "MIT",
+  "scripts": {
+    "prod": "NODE_ENV=production webpack",
+    "dev": "NODE_ENV=development webpack --watch",
+    "start": "NODE_ENV=development webpack --watch webpack-dev-server"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.0.4",
+    "css-loader": "^5.0.1",
+    "file-loader": "^6.2.0",
+    "mini-css-extract-plugin": "^1.3.2",
+    "postcss": "^8.1.14",
+    "postcss-loader": "^4.1.0",
+    "tailwindcss": "^2.0.1",
+    "webpack": "^5.10.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^3.11.0"
+  }
+}

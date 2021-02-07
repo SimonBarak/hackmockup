@@ -1,0 +1,93 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+body {
+  /* background: linear-gradient(
+    90deg,
+    rgba(100, 100, 100, 1) 0%,
+    rgba(100, 100, 100, 1) 20%,
+    rgba(100, 100, 100, 1) 100%
+  ); */
+  /* background-image: url("./img/bg.jpg");
+  background-size: cover; */
+  /* background: linear-gradient(
+    0deg,
+    rgba(35, 54, 179, 1) 24%,
+    rgba(20, 0, 71, 1) 100%
+  ); */
+  /*background-color: #ffff02;*/
+  background-color: rgb(0, 0, 10);
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.mobile-mockup {
+  border-radius: 2rem;
+  position: relative;
+  box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  width: 320px; /* 720px 320px 465px */
+  height: 570px;
+}
+
+.mobile-mockup > div {
+  border-radius: 1.9rem;
+  overflow: hidden;
+}
+
+.mobile-mockup > div::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+  border-radius: 2.2rem;
+  box-shadow: inset 0 0 5px 5px rgba(150, 150, 150, 0.5);
+}
+
+.vertical-absolute-center {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* @media (min-width: 600px) {
+  .mockup-gallery button {
+    opacity: 0;
+  }
+} */
+
+.mockup-gallery:hover button {
+  opacity: 1;
+}
+
+.slide {
+  /* position: absolute; */
+  min-width: 100px;
+  min-height: 100px;
+  height: 100%;
+  z-index: 0;
+}
+
+.active {
+  z-index: 1;
+  /* transition: filter 1s; */
+  /* opacity: 1; */
+}
+
+@keyframes flash {
+  0% {
+    filter: blur(5px);
+  }
+
+  100% {
+    filter: blur(0);
+  }
+}
