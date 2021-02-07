@@ -26,6 +26,10 @@ body {
   background-color: var(--bg-color);
 }
 
+.cta {
+  color: var(--bg-color);
+}
+
 input[type="file"] {
   display: none;
 }
