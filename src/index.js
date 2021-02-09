@@ -6,39 +6,89 @@ const appState = {
   items: null,
 };
 
-let intervalID;
-const sliderEl = document.querySelector(".mockup-gallery");
+let mediaRecorder;
+let recordedBlobs = [];
 
 const mockupElement = document.getElementById("mockup");
 const initialSlideElement = document.getElementById("initial-slide");
 const contorlersElement = document.getElementById("contorlers");
 
-// SET CURRENT ELEMENT
-const setCurrentItem = (state, step) => {
-  let { currentIndex, items } = state;
-  // use modulo to set new index in looped array
-  const newIndex = (currentIndex + step + items.length) % items.length;
-  // handle DOM
-  items[currentIndex].classList.remove("active");
-  items[newIndex].classList.add("active");
-  // set global Index out of the setSlide function
-  state.currentIndex = newIndex;
+/////////////////////////////
+// SCREEN CAPTURE
+////////////////////////////
+
+const captureOptions = {
+  video: {
+    cursor: "never",
+  },
+  audio: false,
 };
 
-// THAT LOOP TROUGHT ARRAY OF VIDEOS
-const addOnEndCallBack = (el, index, array) => {
-  const newIndex = (index + 1) % array.length;
-  console.log(array[newIndex]);
-  el.onended = () => {
-    array[newIndex].parentElement.classList.add("active");
-    el.parentElement.classList.remove("active");
-    array[newIndex].play();
+var recordedChunks = [];
+
+function handleDataAvailable(event) {
+  if (event.data.size > 0) {
+    recordedChunks.push(event.data);
+  } else {
+    // ...
+  }
+}
+function startRecording() {
+  let options = { mimeType: "video/webm;codecs=vp9,opus" };
+  if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+    console.error(`${options.mimeType} is not supported`);
+    options = { mimeType: "video/webm;codecs=vp8,opus" };
+    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+      console.error(`${options.mimeType} is not supported`);
+      options = { mimeType: "video/webm" };
+      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+        console.error(`${options.mimeType} is not supported`);
+        options = { mimeType: "" };
+      }
+    }
+  }
+
+  try {
+    mediaRecorder = new MediaRecorder(window.stream, options);
+  } catch (e) {
+    console.error("Exception while creating MediaRecorder:", e);
+    errorMsgElement.innerHTML = `Exception while creating MediaRecorder: ${JSON.stringify(
+      e
+    )}`;
+    return;
+  }
+
+  console.log("Created MediaRecorder", mediaRecorder, "with options", options);
+  mediaRecorder.onstop = (event) => {
+    console.log("Recorder stopped: ", event);
+    console.log("Recorded Blobs: ", recordedBlobs);
   };
+  mediaRecorder.ondataavailable = handleDataAvailable;
+  mediaRecorder.start();
+  console.log("MediaRecorder started", mediaRecorder);
+}
 
-  return el;
+function handleSuccess(stream) {
+  console.log("getUserMedia() got stream:", stream);
+  window.stream = stream;
+  startRecording();
+}
+
+const startCapture = async () => {
+  console.log("startCapture");
+  try {
+    const stream = await navigator.mediaDevices.getDisplayMedia(captureOptions);
+    handleSuccess(stream);
+  } catch (err) {
+    console.error("Error: " + err);
+  }
 };
 
-// ADD SLIDE FUNCTION
+const stopCapture = (evt) => {
+  mediaRecorder.stop();
+};
+
+// TODO LOGICAL FUNCTION
 const cretateVideoElement = (url) => {
   // Add image
   // let newMedia = document.createElement("img");
@@ -61,19 +111,7 @@ const cretateVideoElement = (url) => {
   mockupElement.appendChild(newSlide);
   mockupElement.removeChild(initialSlideElement);
   contorlersElement.classList.add("hidden");
-
   return newVideo;
-};
-
-// ADD SLIDE FUNCTION
-const addSlide = (url, index, array) => {
-  // create image element
-  let newSlide = document.createElement("div");
-  newSlide.classList.add("slide");
-
-  // Add image
-  // let newImege = document.createElement("img");
-  // newImege.setAttribute("src", localUrl);
 };
 
 // LOAD IMAGE FUNCTION
@@ -90,23 +128,6 @@ const loadMedia = (event) => {
     };
     reader.readAsDataURL(filed);
   });
-
-  // initSlider(sliderEl);
-  //initiMedia(videoUrlArray);
-};
-
-const startStopAuto = (params) => {
-  if (!appState.auto) {
-    window.clearInterval(intervalID);
-    setCurrentItem(appState, +1);
-    intervalID = window.setInterval(() => setCurrentItem(appState, +1), 2500);
-    const element = appState.items[appState.index];
-    const childVideo = element.childNodes;
-    appState.auto = true;
-  } else {
-    window.clearInterval(intervalID);
-    appState.auto = false;
-  }
 };
 
 //INIT INPUT ELEMENT
@@ -140,3 +161,53 @@ const initialiteInput = (input) => {
 
 const ColorPickerElement = document.getElementById("bg-color");
 initialiteInput(ColorPickerElement);
+
+/////////////////////////////
+// Drag title
+////////////////////////////
+// Make the DIV element draggable:
+dragElement(document.getElementById("draggable"));
+
+function dragElement(elmnt) {
+  var pos1 = 0,
+    pos2 = 0,
+    pos3 = 0,
+    pos4 = 0;
+  if (document.getElementById(elmnt.id + "-handler")) {
+    // if present, the handler is where you move the DIV from:
+    document.getElementById(elmnt.id + "-handler").onmousedown = dragMouseDown;
+  } else {
+    // otherwise, move the DIV from anywhere inside the DIV:
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = elmnt.offsetTop - pos2 + "px";
+    elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
+  }
+
+  function closeDragElement() {
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
