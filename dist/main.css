@@ -834,13 +834,9 @@ input[type="file"] {
   min-width: 150px;
   width: 280px;
   resize: horizontal;
-  border-radius: 2rem;
   border: 1px solid transparent;
-}
-
-.ratio:hover {
-  border: 1px solid blue;
-  border-radius: 0;
+  box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.8);
+  border-radius: 2rem;
 }
 
 .initial-height {
@@ -850,7 +846,6 @@ input[type="file"] {
 .mobile-mockup {
   border-radius: 2rem;
   position: relative;
-  box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.8);
   border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
@@ -859,6 +854,14 @@ input[type="file"] {
   overflow: hidden;
   height: 100%;
   z-index: 0;
+}
+
+.mobile-mockup > div > video {
+  border-radius: 1.9rem;
+}
+
+.mobile-mockup > div > img {
+  border-radius: 1.9rem;
 }
 
 .mobile-mockup > div::after {
