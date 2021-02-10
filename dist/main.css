@@ -581,8 +581,8 @@ video {
   height: 2rem;
 }
 
-.h-72 {
-  height: 18rem;
+.h-60 {
+  height: 15rem;
 }
 
 .text-xl {
@@ -843,8 +843,11 @@ input[type="file"] {
   border-radius: 0;
 }
 
+.initial-height {
+  min-height: 570px;
+}
+
 .mobile-mockup {
-  min-height: 520px;
   border-radius: 2rem;
   position: relative;
   box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.8);
@@ -872,10 +875,6 @@ input[type="file"] {
 
 .steps {
   max-width: 520px;
-}
-
-.initial-slide {
-  height: 620px;
 }
 
 .active {

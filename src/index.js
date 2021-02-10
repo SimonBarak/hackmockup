@@ -99,7 +99,7 @@ const cretateVideoElement = (url) => {
   newVideo.defaultMuted = true;
   newVideo.setAttribute("type", "video/mp4");
   newVideo.setAttribute("src", url);
-  newVideo.setAttribute("width", "720");
+  newVideo.setAttribute("width", "100%");
   newVideo.load();
   newVideo.play();
   newVideo.setAttribute("loop", "true");
@@ -110,7 +110,10 @@ const cretateVideoElement = (url) => {
   newSlide.appendChild(newVideo);
   mockupElement.appendChild(newSlide);
   mockupElement.removeChild(initialSlideElement);
+  mockupElement.classList.remove("initial-height");
+
   contorlersElement.classList.add("hidden");
+
   return newVideo;
 };
 
